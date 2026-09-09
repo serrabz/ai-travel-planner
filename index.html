@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Travel Planner</title>
+    <!-- Marked.js for rendering AI Markdown responses into HTML -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <style>
+        /* Modern CSS Reset & Color Scheme */
+        :root {
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --primary-color: #2563eb;
+            --primary-hover: #1d4ed8;
+            --text-heading: #0f172a;
+            --text-subheading: #1e3a8a;
+            --text-body: #334155;
+            --text-bold: #0284c7;
+            --border-color: #cbd5e1;
+            --shadow-color: rgba(15, 23, 42, 0.08);
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 0 20px 40px 20px;
+            background-color: var(--bg-color);
+            color: var(--text-body);
+            line-height: 1.6;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            color: var(--text-heading);
+            font-size: 2rem;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            color: #64748b;
+            font-size: 1rem;
+            margin: 0;
+        }
+
+        /* Form Container Card */
+        .card {
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px var(--shadow-color);
+            border: 1px solid #e2e8f0;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 600;
+            color: var(--text-heading);
+            font-size: 0.95rem;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            box-sizing: border-box;
+            color: var(--text-heading);
+            font-size: 0.95rem;
+            background-color: #ffffff;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+        }
+
+        .btn-main {
+            width: 100%;
+            padding: 14px;
+            background-color: var(--primary-color);
+            color: #ffffff;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background-color 0.2s;
+            margin-top: 10px;
+        }
+
+        .btn-main:hover {
+            background-color: var(--primary-hover);
+        }
+
+        .btn-main:disabled {
+            background-color: #94a3b8;
+            cursor: not-allowed;
+        }
+
+        /* Action Buttons for Print & Download */
+        .action-buttons {
+            display: none;
+            gap: 12px;
+            margin-top: 25px;
+            justify-content: flex-end;
+        }
+
+        .btn-action {
+            padding: 10px 20px;
+            font-size: 0.9rem;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: background-color 0.2s;
+        }
+
+        .btn-print {
+            background-color: #16a34a;
+            color: white;
+        }
+        .btn-print:hover {
+            background-color: #15803d;
+        }
+
+        .btn-pdf {
+            background-color: #dc2626;
+            color: white;
+        }
+        .btn-pdf:hover {
+            background-color: #b91c1c;
+        }
+
+        /* Generated Itinerary Display Styling */
+        #resultContainer {
+            margin-top: 15px;
+            padding: 30px;
+            background: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: 0 4px 12px var(--shadow-color);
+            border: 1px solid #e2e8f0;
+            display: none;
+            color: var(--text-body);
+        }
+
+        /* Customizing Markdown typography colors inside the itinerary */
+        #resultContainer h1,
+        #resultContainer h2,
+        #resultContainer h3 {
+            color: var(--text-subheading);
+            margin-top: 24px;
+            margin-bottom: 12px;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 6px;
+        }
+
+        #resultContainer h1:first-child,
+        #resultContainer h2:first-child,
+        #resultContainer h3:first-child {
+            margin-top: 0;
+        }
+
+        #resultContainer strong {
+            color: var(--text-bold);
+            font-weight: 600;
+        }
+
+        #resultContainer ul, #resultContainer ol {
+            padding-left: 20px;
+            margin-bottom: 16px;
+        }
+
+        #resultContainer li {
+            margin-bottom: 6px;
+        }
+
+        .loading {
+            text-align: center;
+            color: #64748b;
+            font-weight: 600;
+            font-size: 1.05rem;
+            padding: 20px 0;
+        }
+
+        /* Print Media Styles (Hides form and buttons when printing/saving PDF) */
+        @media print {
+            body {
+                background-color: #ffffff;
+                margin: 0;
+                padding: 0;
+                max-width: 100%;
+                color: #000000;
+            }
+            .header, form, .action-buttons {
+                display: none !important;
+            }
+            #resultContainer {
+                display: block !important;
+                box-shadow: none;
+                border: none;
+                padding: 0;
+                color: #000000;
+            }
+            #resultContainer h1,
+            #resultContainer h2,
+            #resultContainer h3,
+            #resultContainer strong {
+                color: #000000 !important;
+                border-color: #cccccc !important;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>✈️ AI Travel Planner</h1>
+        <p class="subtitle">Generate custom travel itineraries powered by Azure OpenAI</p>
+    </div>
+
+    <div class="card">
+        <form id="travelForm">
+            <div class="form-group">
+                <label for="destination">Destination:</label>
+                <input type="text" id="destination" placeholder="e.g. Paris, Tokyo, Kerala" required>
+            </div>
+
+            <div class="form-group">
+                <label for="days">Number of Days:</label>
+                <input type="number" id="days" placeholder="e.g. 3, 5, 7" min="1" required>
+            </div>
+
+            <div class="form-group">
+                <label for="budget">Budget Level:</label>
+                <select id="budget">
+                    <option value="budget">Budget-Friendly</option>
+                    <option value="medium" selected>Medium / Moderate</option>
+                    <option value="luxury">Luxury</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="preferences">Preferences / Interests:</label>
+                <input type="text" id="preferences" placeholder="e.g. Food, Culture, Adventure, Beaches">
+            </div>
+
+            <button type="submit" id="submitBtn" class="btn-main">Generate Itinerary</button>
+        </form>
+    </div>
+
+    <!-- Export Actions -->
+    <div id="actionButtons" class="action-buttons">
+        <button onclick="window.print()" class="btn-action btn-print">🖨️ Print Itinerary</button>
+        <button onclick="window.print()" class="btn-action btn-pdf">📄 Download PDF</button>
+    </div>
+
+    <!-- Itinerary Display Output Container -->
+    <div id="resultContainer"></div>
+
+    <script>
+        const form = document.getElementById('travelForm');
+        const submitBtn = document.getElementById('submitBtn');
+        const resultContainer = document.getElementById('resultContainer');
+        const actionButtons = document.getElementById('actionButtons');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Generating your itinerary... ⏳';
+           
+            actionButtons.style.display = 'none';
+            resultContainer.style.display = 'block';
+            resultContainer.className = 'loading';
+            resultContainer.textContent = 'Please wait while Azure OpenAI creates your travel plan...';
+
+            const destination = document.getElementById('destination').value;
+            const days = document.getElementById('days').value;
+            const budget = document.getElementById('budget').value;
+            const preferences = document.getElementById('preferences').value;
+
+            try {
+                const response = await fetch('http://localhost:5000/api/travel-plan', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ destination, days, budget, preferences })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    resultContainer.className = '';
+                    // Convert Markdown output to styled HTML
+                    resultContainer.innerHTML = marked.parse(data.itinerary);
+                    actionButtons.style.display = 'flex';
+                } else {
+                    resultContainer.className = '';
+                    resultContainer.textContent = 'Error: ' + (data.error || 'Failed to fetch itinerary.');
+                }
+            } catch (err) {
+                resultContainer.className = '';
+                resultContainer.textContent = 'Network Error: Could not connect to backend server.';
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Generate Itinerary';
+            }
+        });
+    </script>
+</body>
+</html> 
