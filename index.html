@@ -296,9 +296,10 @@
             const preferences = document.getElementById('preferences').value;
 
             try {
-                const response = await fetch('http://localhost:5000/api/travel-plan', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                const response = await fetch("https://ai-travel-planner-94ge.onrender.com/api/travel-plan",
+                  {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ destination, days, budget, preferences })
                 });
 
