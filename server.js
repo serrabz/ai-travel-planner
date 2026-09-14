@@ -28,9 +28,9 @@ app.post('/api/travel-plan', async (req, res) => {
       Format the output clearly with Markdown headings, bullet points, and daily safety callouts.
     `;
 
-    // Call Gemini 2.5 Flash model
+    // Call Gemini 3.6 Flash model
     const response = await ai.models.generateContent({
-      model: 'gemini-2.5-flash',
+      model: 'gemini-3.6-flash',
       contents: prompt,
     });
 
