@@ -1,62 +1,45 @@
-const express = require('express');
-const cors = require('cors');
+import express from 'express';
+import cors from 'cors';
+import { GoogleGenAI } from '@google/genai';
 
 const app = express();
-const PORT = 5000;
-
 app.use(cors());
 app.use(express.json());
 
-// Azure OpenAI Configuration
-const endpoint = "https://ai-travel-planning-assi-resource.services.ai.azure.com";
-const apiKey = process.env.AZURE_OPENAI_KEY;
+// Initialize Gemini SDK with API Key
+const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
-const deploymentName = "gpt-4.1-mini";
+app.post('/api/generate-itinerary', async (req, res) => {
+  try {
+    const { destination, days, budget } = req.body;
 
-app.post('/api/travel-plan', async (req, res) => {
-    try {
-        const { destination, days, budget, preferences } = req.body;
+    // Solo Female & Safety-First Prompt
+    const prompt = `
+      You are an expert AI Travel & Safety Planner specializing in safe itineraries for solo travelers and female safety-conscious tourists.
+     
+      Create a detailed ${days}-day travel itinerary for ${destination} with a budget level of "${budget}".
+     
+      For each day:
+      1. Recommend verified, well-lit accommodations and safe neighborhood areas.
+      2. Highlight key safety tips (safe areas vs. streets/neighborhoods to avoid at night).
+      3. Outline structured daytime activities, verified group tours, and safe local transport options.
+      4. Include local emergency numbers, safe rideshare options, and night transport guidelines.
+     
+      Format the output clearly with Markdown headings, bullet points, and daily safety callouts.
+    `;
 
-        if (!destination || !days) {
-            return res.status(400).json({ error: 'Destination and days are required.' });
-        }
+    // Call Gemini 2.5 Flash model
+    const response = await ai.models.generateContent({
+      model: 'gemini-2.5-flash',
+      contents: prompt,
+    });
 
-        const url = `${endpoint}/openai/deployments/${deploymentName}/chat/completions?api-version=2024-02-01`;
-
-        const prompt = `Create a detailed ${days}-day travel itinerary for ${destination}.
-Budget level: ${budget || 'flexible'}.
-Preferences: ${preferences || 'general sightseeing'}.
-Provide day-by-day recommendations including activities and travel tips.`;
-
-        const response = await fetch(url, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'api-key': apiKey
-            },
-            body: JSON.stringify({
-                messages: [
-                    { role: 'system', content: 'You are an expert AI Travel Assistant providing structured travel itineraries.' },
-                    { role: 'user', content: prompt }
-                ]
-            })
-        });
-
-        const data = await response.json();
-
-        if (!response.ok) {
-            throw new Error(data.error?.message || 'Azure API request failed');
-        }
-
-        const itinerary = data.choices[0].message.content;
-        res.json({ success: true, itinerary });
-
-    } catch (error) {
-        console.error('Azure AI Error:', error.message);
-        res.status(500).json({ error: 'Failed to generate travel plan.', details: error.message });
-    }
+    res.json({ itinerary: response.text });
+  } catch (error) {
+    console.error("Gemini API Error:", error);
+    res.status(500).json({ error: "Failed to generate safety travel itinerary." });
+  }
 });
 
-app.listen(PORT, () => {
-    console.log(`Server running on http://localhost:${PORT}`);
-}); 
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`)); 
