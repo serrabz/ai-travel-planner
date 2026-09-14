@@ -9,7 +9,7 @@ app.use(express.json());
 
 // Initialize Gemini SDK with API Key
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY }); 
-app.post('/api/generate-itinerary', async (req, res) => {
+app.post('/api/travel-plan', async (req, res) => {
   try {
     const { destination, days, budget } = req.body;
 
