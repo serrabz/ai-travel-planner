@@ -30,7 +30,7 @@ app.post('/api/travel-plan', async (req, res) => {
 
     // Call Gemini 3.6 Flash model
     const response = await ai.models.generateContent({
-      model: 'gemini-3.6-flash',
+      model: 'gemini-2.0-flash',
       contents: prompt,
     });
 
