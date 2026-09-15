@@ -28,7 +28,7 @@ CRITICAL REQUIREMENTS:
 3. Format the response clearly with day-by-day breakdowns and a dedicated safety section.`;
 
         const response = await ai.models.generateContent({
-            model: 'gemini-2.5-flash',
+            model: 'gemini-2.0-flash',
             contents: prompt,
         });
 
