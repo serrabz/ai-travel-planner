@@ -1,7 +1,7 @@
 import express from 'express';
 import cors from 'cors';
-import dotenv from 'dotenv';
 import { GoogleGenAI } from '@google/genai';
+import dotenv from 'dotenv';
 
 dotenv.config();
 
@@ -9,26 +9,21 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Initialize Google Gen AI SDK
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
 app.post('/generate-itinerary', async (req, res) => {
     try {
         const { destination, days, budget, preferences } = req.body;
-
-        // Strict safety-first prompt tailored for solo female travelers
-        const prompt = `You are an expert solo female travel safety advisor and professional itinerary planner.
-Create a detailed, ${days}-day travel itinerary for ${destination}.
-Budget Level: ${budget}.
-Preferences: ${preferences}.
-
-CRITICAL REQUIREMENTS:
-1. Emphasize safety, well-lit accommodations, verified safe neighborhoods, and reliable transport options suitable for a solo female traveler.
-2. Include specific safety warnings, emergency local numbers, and tips for avoiding common scams in ${destination}.
-3. Format the response clearly with day-by-day breakdowns and a dedicated safety section.`;
+       
+        const prompt = `You are an expert solo female travel safety advisor and professional itinerary planner. Create a detailed, ${days}-day travel itinerary for ${destination}. Budget Level: ${budget}. Preferences: ${preferences}.
+       
+        CRITICAL REQUIREMENTS:
+        1. Emphasize safety, well-lit accommodations, verified safe neighborhoods, and reliable transport options suitable for solo women.
+        2. Include specific safety warnings, emergency local numbers, and tips for avoiding common scams in ${destination}.
+        3. Format the response clearly with day-by-day breakdowns and a dedicated safety section.`;
 
         const response = await ai.models.generateContent({
-            model: 'gemini-2.0-flash',
+            model: 'gemini-2.5-flash',
             contents: prompt,
         });
 
@@ -42,4 +37,4 @@ CRITICAL REQUIREMENTS:
 const PORT = process.env.PORT || 10000;
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
-}); 
+});
