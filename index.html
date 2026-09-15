@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Solo Female & Safety-First Travel Planner</title>
     <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 </head>
 <body>
     <header style="padding: 20px; text-align: center; background: #f8f9fa;">
@@ -61,7 +62,7 @@
                 });
                 const json = await response.json();
                 if(json.itinerary) {
-                    resultDiv.innerHTML = json.itinerary;
+                    resultDiv.innerHTML = marked.parse(json.itinerary);
                 } else {
                     resultDiv.innerHTML = "Error: " + (json.error || "Failed to generate.");
                 }
