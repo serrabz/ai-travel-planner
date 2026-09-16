@@ -1,53 +1,281 @@
-  <!DOCTYPE html>
+   <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Solo Female & Safety-First Travel Planner</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Solo Female Safety Travel Planner</title>
+    <!-- Marked library for rich text formatting -->
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <style>
+        :root {
+            --primary: #0284c7;
+            --primary-dark: #0369a1;
+            --accent: #0d9488;
+            --bg-color: #f8fafc;
+            --text-color: #334155;
+            --card-bg: #ffffff;
+            --border-color: #cbd5e1;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            padding: 10px;
+        }
+
+        header {
+            background: linear-gradient(135deg, #0284c7, #0d9488);
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        header h1 {
+            font-size: 1.8rem;
+            margin-bottom: 8px;
+        }
+
+        header p {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        main {
+            max-width: 800px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 600;
+            color: #1e293b;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 1rem;
+            background-color: #fff;
+        }
+
+        button {
+            width: 100%;
+            background-color: var(--primary);
+            color: white;
+            padding: 14px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background-color: var(--primary-dark);
+        }
+
+        /* Result Container - Expanded Layout */
+        #result {
+            margin-top: 25px;
+            white-space: pre-wrap;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f1f5f9;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 5px solid var(--primary);
+            line-height: 1.8;
+            font-size: 1.05rem;
+        }
+
+        /* Safety Checklist Styling */
+        .safety-checklist {
+            background-color: #f0fdf4;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 30px;
+            border-left: 5px solid var(--accent);
+        }
+
+        .safety-checklist h3 {
+            color: #166534;
+            margin-bottom: 10px;
+        }
+
+        .safety-checklist ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+
+        .safety-checklist li {
+            margin-bottom: 10px;
+            font-size: 1rem;
+        }
+
+        .safety-checklist input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            margin-right: 10px;
+            vertical-align: middle;
+            cursor: pointer;
+        }
+
+        /* Budget Calculator Styling */
+        .budget-calculator {
+            background-color: #eff6ff;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 30px;
+            border-left: 5px solid var(--primary);
+        }
+
+        .budget-calculator h3 {
+            color: #1e40af;
+            margin-bottom: 10px;
+        }
+
+        #budget-result {
+            margin-top: 12px;
+            font-weight: bold;
+            color: #1e3c72;
+            font-size: 1.1rem;
+        }
+
+        /* Mobile Responsiveness Optimizations */
+        @media (max-width: 600px) {
+            body {
+                padding: 5px;
+            }
+            main {
+                padding: 12px;
+            }
+            header {
+                padding: 20px 10px;
+            }
+            header h1 {
+                font-size: 1.4rem;
+            }
+            button {
+                padding: 12px;
+                font-size: 1rem;
+            }
+        }
+    </style>
 </head>
 <body>
-    <header style="padding: 20px; text-align: center; background: #f8f9fa;">
-        <nav style="margin-bottom: 15px;">
-            <a href="index.html" style="margin-right: 15px; font-weight: bold;">Planner</a>
-            <a href="blog.html">Safety Blog</a>
-        </nav>
-        <h1>Solo Female & Safety-First Travel Planner</h1>
-        <p>AI-generated, secure itineraries customized for women exploring the world safely.</p>
+
+    <header>
+        <h1>Solo Female Safety Travel Planner</h1>
+        <p>Your secure companion for smart, safe, and independent journeys</p>
     </header>
 
-    <main style="max-width: 600px; margin: 30px auto; padding: 20px; background: #ffffff; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+    <main>
+        <!-- Itinerary Generation Form -->
         <form id="travel-form">
-            <label for="destination">Destination:</label>
-            <input type="text" id="destination" required placeholder="e.g., Tokyo, Kerala, Paris" style="width:100%; padding:8px; margin:8px 0 15px 0;">
+            <div class="form-group">
+                <label for="travel-from">Traveling From (Origin):</label>
+                <input type="text" id="travel-from" placeholder="e.g., Kochi, Bangalore, Mumbai" required>
+            </div>
 
-            <label for="days">Number of Days:</label>
-            <input type="number" id="days" required value="3" min="1" max="14" style="width:100%; padding:8px; margin:8px 0 15px 0;">
+            <div class="form-group">
+                <label for="destination">Traveling To (Destination):</label>
+                <input type="text" id="destination" placeholder="e.g., Goa, Munnar, Tokyo" required>
+            </div>
 
-            <label for="budget">Budget Level:</label>
-            <select id="budget" style="width:100%; padding:8px; margin:8px 0 15px 0;">
-                <option value="Low / Budget">Low / Budget</option>
-                <option value="Medium / Moderate" selected>Medium / Moderate</option>
-                <option value="High / Luxury">High / Luxury</option>
-            </select>
+            <div class="form-group">
+                <label for="days">Number of Days:</label>
+                <input type="number" id="days" placeholder="e.g., 3" min="1" required>
+            </div>
 
-            <label for="preferences">Preferences / Interests:</label>
-            <input type="text" id="preferences" placeholder="e.g., food, adventure, safe nightlife" style="width:100%; padding:8px; margin:8px 0 15px 0;">
+            <div class="form-group">
+                <label for="budget">Budget Level:</label>
+                <select id="budget">
+                    <option value="Budget / Backpacker">Budget / Backpacker</option>
+                    <option value="Medium / Moderate" selected>Medium / Moderate</option>
+                    <option value="Luxury / High-End">Luxury / High-End</option>
+                </select>
+            </div>
 
-            <button type="submit" style="width:100%; background:#007bff; color:white; padding:12px; border:none; border-radius:5px; font-weight:bold; cursor:pointer;">Generate Safety Itinerary</button>
+            <div class="form-group">
+                <label for="preferences">Preferences / Interests:</label>
+                <input type="text" id="preferences" placeholder="e.g., food, adventure, safe nightlife">
+            </div>
+
+            <button type="submit">Generate Secure Itinerary</button>
         </form>
 
-        <div id="result" style="margin-top: 20px; white-space: pre-wrap; font-family: Arial, sans-serif;"></div>
+        <!-- AI Itinerary Output Section -->
+        <div id="result" style="display: none;"></div>
+
+        <!-- Safety Checklist Section -->
+        <div class="safety-checklist">
+            <h3>Solo Female Safety Checklist</h3>
+            <p>Check off each item to ensure your trip security:</p>
+            <ul>
+                <li><label><input type="checkbox"> Emergency contact numbers saved</label></li>
+                <li><label><input type="checkbox"> Verified safe accommodation booked</label></li>
+                <li><label><input type="checkbox"> Trusted local transport arranged</label></li>
+                <li><label><input type="checkbox"> Live location shared with family/friend</label></li>
+                <li><label><input type="checkbox"> Digital copies of ID stored securely</label></li>
+            </ul>
+        </div>
+
+        <!-- Budget Calculator Section -->
+        <div class="budget-calculator">
+            <h3>Trip Budget Estimator</h3>
+            <p>Calculate your estimated daily expenses:</p>
+           
+            <label for="calc-days">Number of Days:</label>
+            <input type="number" id="calc-days" placeholder="e.g., 5" value="3">
+           
+            <label for="calc-style">Travel Style Cost (Per Day):</label>
+            <select id="calc-style">
+                <option value="3000">Budget / Solo Backpacker (₹3,000 / day)</option>
+                <option value="7000" selected>Comfort / Safe Stay (₹7,000 / day)</option>
+                <option value="15000">High-End VIP / Private Transport (₹15,000 / day)</option>
+            </select>
+
+            <button type="button" onclick="calculateBudget()" style="margin-top: 12px; background-color: var(--accent);">Calculate Total Budget</button>
+           
+            <div id="budget-result"></div>
+        </div>
     </main>
 
     <script>
+        // Form submission and Backend Connection
         document.getElementById('travel-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             const resultDiv = document.getElementById('result');
-            resultDiv.innerHTML = "Generating your secure itinerary...";
+            resultDiv.style.display = 'block';
+            resultDiv.innerHTML = "Generating your comprehensive safety travel itinerary...";
 
             const data = {
+                travelFrom: document.getElementById('travel-from').value,
                 destination: document.getElementById('destination').value,
                 days: document.getElementById('days').value,
                 budget: document.getElementById('budget').value,
@@ -61,15 +289,29 @@
                     body: JSON.stringify(data)
                 });
                 const json = await response.json();
-                if(json.itinerary) {
+                if (json.itinerary) {
                     resultDiv.innerHTML = marked.parse(json.itinerary);
                 } else {
                     resultDiv.innerHTML = "Error: " + (json.error || "Failed to generate.");
                 }
             } catch (err) {
-                resultDiv.innerHTML = "Error connecting to the server.";
+                resultDiv.innerHTML = "Connection error. Please check your backend server.";
             }
         });
+
+        // Budget Calculator Script
+        function calculateBudget() {
+            const days = document.getElementById('calc-days').value;
+            const dailyRate = document.getElementById('calc-style').value;
+            const budgetResult = document.getElementById('budget-result');
+           
+            if(days && days > 0) {
+                const total = days * dailyRate;
+                budgetResult.innerHTML = `Estimated Total Cost: ₹${total.toLocaleString('en-IN')}`;
+            } else {
+                budgetResult.innerHTML = `Please enter a valid number of days.`;
+            }
+        }
     </script>
 </body>
-</html>          
+</html>  
